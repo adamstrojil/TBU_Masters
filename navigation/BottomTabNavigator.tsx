@@ -1,13 +1,14 @@
+import * as React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import SplashScreen from '../screens/SplashScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import { BottomTabParamList, SplashScreenParamList, TabOneParamList, TabTwoParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -16,20 +17,27 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="SplashScreen"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      {/* <BottomTab.Screen
+        name="Landin"
+        component={SplashScreenNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="" color={color} />,
+        }}
+      /> */}
       <BottomTab.Screen
-        name="TabOne"
+        name="Affirmation"
         component={TabOneNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-sunny" color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Favorites"
         component={TabTwoNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-star" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -44,15 +52,29 @@ function TabBarIcon(props: { name: string; color: string }) {
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
+
+const SplashScreenStack = createStackNavigator<SplashScreenParamList>();
+
+function SplashScreenNavigator() {
+  return (
+    <SplashScreenStack.Navigator>
+      <SplashScreenStack.Screen
+        name="SplashScreen"
+        component={SplashScreen}
+        options={{ headerTitle: 'Landing Page' }}
+      />
+    </SplashScreenStack.Navigator>
+  );
+}
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
 function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
+        name="Affirmation"
         component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+        //options={{ headerTitle: 'Talk nice to me' }}
       />
     </TabOneStack.Navigator>
   );
@@ -64,9 +86,9 @@ function TabTwoNavigator() {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
-        name="TabTwoScreen"
+        name="Favorites"
         component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
+        options={{ headerTitle: 'Favorites' }}
       />
     </TabTwoStack.Navigator>
   );
