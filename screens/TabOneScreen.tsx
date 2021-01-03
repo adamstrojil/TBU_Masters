@@ -5,6 +5,8 @@ import { Text, View } from '../components/Themed';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import useColorScheme from '../hooks/useColorScheme';
+import Colors from '../constants/Colors';
 
 type Database = {
   affirmations: Array<string>
@@ -22,28 +24,35 @@ export const getMyObject = async (key: string): Promise<Database> => {
 }
 
 export default function TabOneScreen() {
+  const colorScheme = useColorScheme();
   const [title, setTitle] = React.useState<string>("")
+  const [buttonTitle, setButtonTitle] = React.useState<string>("Save this one!")
+  const [buttonDisabled, setButtonDisabled] = React.useState<boolean>(false)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   
   React.useEffect(()=>{
     fetchRandomAffirmation()
   },[])
 
-  const showToast = (message: string) => {
-    ToastAndroid.show(
-      message,
-      ToastAndroid.SHORT,
-    );
-  };
+  // const showToast = (message: string) => {
+  //   ToastAndroid.show(
+  //     message,
+  //     ToastAndroid.SHORT,
+  //   );
+  // };
 
   const fetchRandomAffirmation = () => {
     setTitle("")
+    setButtonTitle("")
+    setButtonDisabled(true)
     setIsLoading(true)
     fetch('https://www.affirmations.dev/')
       .then(response => response.json())
       .then(({ affirmation }: Response) => {
         setIsLoading(false)
         setTitle(affirmation)
+        setButtonDisabled(false)
+        setButtonTitle("Save this one!")
       })
       .catch((err) => console.log(err));
   }
@@ -65,20 +74,24 @@ export default function TabOneScreen() {
         ? setObjectValue({ affirmations: [...database.affirmations, affirmation] }, DATABASE_KEY)
         : setObjectValue({ affirmations: [affirmation] }, DATABASE_KEY)
     })
-    showToast("The affirmation has been saved")
+    setButtonTitle("Saved!")
+    setButtonDisabled(true)
+    //showToast("The affirmation has been saved")
   }
 
   return (
     <View style={styles.container}>
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <Text style={styles.title}>{title}</Text>
       { isLoading && <ActivityIndicator color="#FFFFFF" size="large" />}
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Ionicons size={40} color="white" style={{ marginVertical:16 }} onPress={fetchRandomAffirmation} name="ios-refresh"/>
+      <Ionicons size={40} color={Colors[colorScheme].tint } style={{ marginVertical:16 }} onPress={fetchRandomAffirmation} name="ios-refresh"/>
       <View style={{ marginVertical: 16 }} />
       <Button
-        title="Save this one!"
+        title={buttonTitle}
         onPress={() => saveAffirmation(title)}
-        color='rgba(47,47,47,1.0)'
+        color={Colors[colorScheme].tint }
+        disabled={buttonDisabled}
       >
       </Button>
     </View>

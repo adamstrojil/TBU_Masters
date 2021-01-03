@@ -5,6 +5,8 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 
 import { Text, View } from '../components/Themed';
 import { DATABASE_KEY, getMyObject } from './TabOneScreen';
+import Colors from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
 
 
 export default function TabTwoScreen() {
@@ -12,6 +14,7 @@ export default function TabTwoScreen() {
   const [filteredResults, setFilteredresults] = React.useState<Array<string>>([])
   const [query, setQuery] = React.useState<string>("")
   const isFocused = useIsFocused()
+  const colorScheme = useColorScheme();
 
   React.useEffect(() => {
     isFocused && getMyObject(DATABASE_KEY)
@@ -19,7 +22,7 @@ export default function TabTwoScreen() {
         setAffirmationList(affirmations)
       })
   }, [isFocused])
-  
+
   React.useEffect(() => {
     console.log('affirmationList: ', affirmationList);
     setFilteredresults(query
@@ -37,37 +40,6 @@ export default function TabTwoScreen() {
     console.log('Done clearing.')
   }
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>List of saved affirmations</Text>
-      <TextInput
-        multiline
-        numberOfLines={2}
-        placeholderTextColor="rgb(200,200,200)"
-        onChangeText={(text: string) => setQuery(text)}
-        value={query}
-        placeholder="Search..."
-        style={{ height: "auto", borderColor: 'gray', borderWidth: 1, color: "white", width: "70%", paddingHorizontal: 8, marginVertical: 8 }}
-      />
-      <View style={styles.list}>
-        <FlatList
-          data={query ? filteredResults : affirmationList}
-          renderItem={({ item }) =>
-            <View>
-              <Text style={styles.item}>- {item}</Text>
-            </View>}
-          keyExtractor={(_item, index) => index.toString()}
-        />
-      </View>
-
-      {!query && !!affirmationList.length && <Button
-        title="Clear list"
-        onPress={clearAll}
-        color="red"
-      />}
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -97,12 +69,46 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     fontSize: 20,
     fontWeight: 'bold',
-    backgroundColor: 'rgba(47,47,47,1.0)',
+    //backgroundColor: Colors[colorScheme].listBackground, // 'rgba(47,47,47,1.0)',
   },
   item: {
-    backgroundColor: 'rgba(27,27,27,1.0)',
+    backgroundColor: Colors[colorScheme].listItemBackground, // 'rgba(47,47,47,1.0)',
     padding: 10,
     paddingBottom: 8,
     fontSize: 14,
   },
 });
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>List of saved affirmations</Text>
+      <TextInput
+        multiline
+        numberOfLines={2}
+        placeholderTextColor={Colors[colorScheme].placeholder}
+        onChangeText={(text: string) => setQuery(text)}
+        value={query}
+        placeholder="Search..."
+        style={{ height: "auto", borderColor: 'gray', borderWidth: 1, color:  Colors[colorScheme].text, width: "70%", paddingHorizontal: 8, marginVertical: 8 }}
+      />
+      <View style={styles.list}>
+        <FlatList
+          data={query ? filteredResults : affirmationList}
+          renderItem={({ item }) =>
+            <View>
+              <Text style={styles.item}>- {item}</Text>
+            </View>}
+          keyExtractor={(_item, index) => index.toString()}
+        />
+      </View>
+
+      {!query && !!affirmationList.length && <Button
+        title="Clear list"
+        onPress={clearAll}
+        color="red"
+      />}
+    </View>
+  );
+  
+}
+
