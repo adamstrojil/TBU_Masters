@@ -1,23 +1,27 @@
 import * as React from 'react';
-import { AsyncStorage, Button, FlatList, ScrollView, SectionList, StyleSheet, TextInput } from 'react-native';
+import { AsyncStorage, Button, FlatList, StyleSheet, TextInput } from 'react-native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+
 
 import { Text, View } from '../components/Themed';
 import { DATABASE_KEY, getMyObject } from './TabOneScreen';
-
 
 
 export default function TabTwoScreen() {
   const [affirmationList, setAffirmationList] = React.useState<Array<string>>([])
   const [filteredResults, setFilteredresults] = React.useState<Array<string>>([])
   const [query, setQuery] = React.useState<string>("")
+  const isFocused = useIsFocused()
 
   React.useEffect(() => {
-    getMyObject(DATABASE_KEY).then(database => database.affirmations).then(affirmations => {
-      setAffirmationList(affirmations)
-    })
-  })
-
+    isFocused && getMyObject(DATABASE_KEY)
+      .then(({ affirmations }) => {
+        setAffirmationList(affirmations)
+      })
+  }, [isFocused])
+  
   React.useEffect(() => {
+    console.log('affirmationList: ', affirmationList);
     setFilteredresults(query
       ? affirmationList.filter(affirmation => affirmation.toLowerCase().includes(query.toLowerCase()))
       : affirmationList)
@@ -25,7 +29,6 @@ export default function TabTwoScreen() {
 
   const clearAll = async () => {
     try {
-      //setFilteredresults([])
       await AsyncStorage.clear()
       setAffirmationList([])
     } catch (e) {
@@ -47,15 +50,13 @@ export default function TabTwoScreen() {
         style={{ height: "auto", borderColor: 'gray', borderWidth: 1, color: "white", width: "70%", paddingHorizontal: 8, marginVertical: 8 }}
       />
       <View style={styles.list}>
-        {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
         <FlatList
-          data={query && filteredResults.length ? filteredResults : affirmationList}
+          data={query ? filteredResults : affirmationList}
           renderItem={({ item }) =>
             <View>
               <Text style={styles.item}>- {item}</Text>
-              {/* <Button title="remove" onPress={() => { }} color='rgba(47,47,47,1.0)' /> */}
             </View>}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(_item, index) => index.toString()}
         />
       </View>
 
@@ -77,10 +78,7 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    //marginHorizontal:16,
     width: "90%",
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   title: {
     fontSize: 20,
@@ -106,6 +104,5 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingBottom: 8,
     fontSize: 14,
-    //height: 44,
   },
 });

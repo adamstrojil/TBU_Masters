@@ -5,10 +5,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import SplashScreen from '../screens/SplashScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, SplashScreenParamList, TabOneParamList, TabTwoParamList } from '../types';
+import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -19,13 +18,6 @@ export default function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="SplashScreen"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
-      {/* <BottomTab.Screen
-        name="Landin"
-        component={SplashScreenNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="" color={color} />,
-        }}
-      /> */}
       <BottomTab.Screen
         name="Affirmation"
         component={TabOneNavigator}
@@ -53,19 +45,6 @@ function TabBarIcon(props: { name: string; color: string }) {
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 
-const SplashScreenStack = createStackNavigator<SplashScreenParamList>();
-
-function SplashScreenNavigator() {
-  return (
-    <SplashScreenStack.Navigator>
-      <SplashScreenStack.Screen
-        name="SplashScreen"
-        component={SplashScreen}
-        options={{ headerTitle: 'Landing Page' }}
-      />
-    </SplashScreenStack.Navigator>
-  );
-}
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
 function TabOneNavigator() {
@@ -74,7 +53,6 @@ function TabOneNavigator() {
       <TabOneStack.Screen
         name="Affirmation"
         component={TabOneScreen}
-        //options={{ headerTitle: 'Talk nice to me' }}
       />
     </TabOneStack.Navigator>
   );

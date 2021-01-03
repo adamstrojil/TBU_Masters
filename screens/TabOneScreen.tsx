@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { ActivityIndicator, Button, StyleSheet, TextInput, ToastAndroid } from 'react-native';
+import { ActivityIndicator, Button, StyleSheet, ToastAndroid } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,7 +16,6 @@ type Response = {
 export const DATABASE_KEY = "key"
 
 export const getMyObject = async (key: string): Promise<Database> => {
-  //try {
   const jsonValue = await AsyncStorage.getItem(key)
 
   return jsonValue ? JSON.parse(jsonValue) : { affirmations: [] }
@@ -63,7 +61,6 @@ export default function TabOneScreen() {
 
   const saveAffirmation = (affirmation: string) => {
     getMyObject("key").then((database: Database) => {
-      console.log('database: ', database);
       database
         ? setObjectValue({ affirmations: [...database.affirmations, affirmation] }, DATABASE_KEY)
         : setObjectValue({ affirmations: [affirmation] }, DATABASE_KEY)
@@ -76,17 +73,10 @@ export default function TabOneScreen() {
       <Text style={styles.title}>{title}</Text>
       { isLoading && <ActivityIndicator color="#FFFFFF" size="large" />}
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      {/* <EditScreenInfo path="/screens/TabOneScreen.js" /> */}
       <Ionicons size={40} color="white" style={{ marginVertical:16 }} onPress={fetchRandomAffirmation} name="ios-refresh"/>
-      {/* <Button
-        color='rgba(47,47,47,1.0)'
-        title="get some!"
-        onPress={fetchRandomAffirmation}
-      > 
-      </Button>*/}
       <View style={{ marginVertical: 16 }} />
       <Button
-        title="save me this one pls!"
+        title="Save this one!"
         onPress={() => saveAffirmation(title)}
         color='rgba(47,47,47,1.0)'
       >
