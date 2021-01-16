@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import * as React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
+import TabOneScreen from "../screens/TabOneScreen";
+import TabTwoScreen from "../screens/TabTwoScreen";
+import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -17,19 +17,24 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="SplashScreen"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+    >
       <BottomTab.Screen
         name="Affirmation"
         component={TabOneNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-sunny" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-sunny" color={color} />
+          ),
         }}
       />
       <BottomTab.Screen
         name="Favorites"
         component={TabTwoNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-star" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-star" color={color} />
+          ),
         }}
       />
     </BottomTab.Navigator>
@@ -50,10 +55,7 @@ const TabOneStack = createStackNavigator<TabOneParamList>();
 function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="Affirmation"
-        component={TabOneScreen}
-      />
+      <TabOneStack.Screen name="Affirmation" component={TabOneScreen} />
     </TabOneStack.Navigator>
   );
 }
@@ -66,7 +68,7 @@ function TabTwoNavigator() {
       <TabTwoStack.Screen
         name="Favorites"
         component={TabTwoScreen}
-        options={{ headerTitle: 'Favorites' }}
+        options={{ headerTitle: "Favorites" }}
       />
     </TabTwoStack.Navigator>
   );
